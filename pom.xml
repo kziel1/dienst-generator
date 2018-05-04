@@ -43,6 +43,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>dienst-generator</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
