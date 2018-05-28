@@ -15,6 +15,6 @@ public class DayOff extends Wish {
 
     @Override
     public void applyWish(List<Map<String, Integer>> shifts) {
-        shifts.get(day).remove(employee);
+        shifts.get(day).put(employee, 0);
     }
 }

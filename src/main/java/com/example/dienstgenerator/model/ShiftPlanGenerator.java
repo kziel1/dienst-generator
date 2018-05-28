@@ -23,8 +23,8 @@ public class ShiftPlanGenerator {
     public List<Map<String, Integer>> generateShiftPlan() {
         initiateShifts();
         applyWishes();
-        normalizeNormalShifts();
         normalizeWeekendShifts();
+        normalizeNormalShifts();
         return shifts;
     }
 
@@ -63,11 +63,11 @@ public class ShiftPlanGenerator {
                 .forEach(wish -> wish.applyWish(shifts));
     }
 
-    private void normalizeNormalShifts() {
+    private void normalizeWeekendShifts() {
 
     }
 
-    private void normalizeWeekendShifts() {
+    private void normalizeNormalShifts() {
 
     }
 }
