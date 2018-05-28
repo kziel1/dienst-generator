@@ -18,8 +18,18 @@ public class DayOn extends Wish {
         if (day > 0) {
             shifts.get(day - 1).put(employee, 0);
         }
+        if (day > 1) {
+            if (shifts.get(day - 2).get(employee) > 0) {
+                shifts.get(day - 2).put(employee, 10);
+            }
+        }
         if (day < shifts.size() - 1) {
             shifts.get(day + 1).put(employee, 0);
+        }
+        if (day < shifts.size() - 2) {
+            if (shifts.get(day + 2).get(employee) > 0) {
+                shifts.get(day + 2).put(employee, 10);
+            }
         }
     }
 }

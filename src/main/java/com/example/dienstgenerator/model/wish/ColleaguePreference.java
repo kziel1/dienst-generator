@@ -18,7 +18,7 @@ public class ColleaguePreference extends Wish {
         for (Map<String, Integer> shift : shifts) {
             Integer employeeWeight = shift.get(employee);
             Integer colleagueWeight = shift.get(colleague);
-            if (employeeWeight == 100 || employeeWeight == 0) {
+            if (employeeWeight > 80 || employeeWeight < 20) {
                 continue;
             }
             shift.put(employee, min((employeeWeight + colleagueWeight) / 2 + 20, 100));

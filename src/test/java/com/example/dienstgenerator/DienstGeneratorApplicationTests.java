@@ -1,6 +1,5 @@
 package com.example.dienstgenerator;
 
-import com.example.dienstgenerator.model.Shift;
 import com.example.dienstgenerator.model.ShiftPlanGenerator;
 import com.example.dienstgenerator.model.wish.ColleaguePreference;
 import com.example.dienstgenerator.model.wish.DayOff;
@@ -10,7 +9,6 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -28,8 +26,9 @@ public class DienstGeneratorApplicationTests {
     public void blabla() {
         List<Map<String, Integer>> shifts = ShiftPlanGenerator.builder()
                 .shiftLoad(2)
-                .yearMonth(YearMonth.of(2018, Calendar.JUNE))
-                .employees(Arrays.asList("Tiner", "Schildkröte", "Bitch"))
+                .year(2018)
+                .month(Calendar.MAY)
+                .employees(Arrays.asList("Tiner", "Schildkröte", "Bitch", "Bergdoktor"))
                 .wishes(Arrays.asList(
                         new DayOff("Tiner", 0),
                         new DayOn("Tiner", 2),

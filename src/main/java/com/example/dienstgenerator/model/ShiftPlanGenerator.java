@@ -7,15 +7,13 @@ import com.example.dienstgenerator.model.wish.Wish;
 import lombok.Builder;
 
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Builder
 public class ShiftPlanGenerator {
     private int shiftLoad;
-    private YearMonth yearMonth;
+    private int year;
+    private int month;
     private List<String> employees;
     private List<Wish> wishes;
     private List<Map<String, Integer>> shifts;
@@ -23,14 +21,15 @@ public class ShiftPlanGenerator {
     public List<Map<String, Integer>> generateShiftPlan() {
         initiateShifts();
         applyWishes();
-        normalizeWeekendShifts();
-        normalizeNormalShifts();
+        seedWeekendShifts();
+        seedNormalShifts();
         return shifts;
     }
 
     private void initiateShifts() {
-        shifts = new ArrayList<>(yearMonth.lengthOfMonth());
-        for (int i = 0; i < yearMonth.lengthOfMonth(); i++) {
+        int dayCount = YearMonth.of(year, month + 1).lengthOfMonth();
+        shifts = new ArrayList<>(dayCount);
+        for (int i = 0; i < dayCount; i++) {
             Map<String, Integer> shift = new HashMap<>();
             for (String employee : employees) {
                 shift.put(employee, 50);
@@ -63,11 +62,37 @@ public class ShiftPlanGenerator {
                 .forEach(wish -> wish.applyWish(shifts));
     }
 
-    private void normalizeWeekendShifts() {
-
+    private void seedWeekendShifts() {
+        int weekendShiftCount = getWeekendShiftCount();
     }
 
-    private void normalizeNormalShifts() {
+    private int getWeekendShiftCount() {
+        int weekendShiftCount = 0;
+        Calendar calendar = Calendar.getInstance();
+        for (int i = 1; i < shifts.size() + 1; i++) {
+            calendar.set(year, month, i);
+            if (Arrays.asList(Calendar.FRIDAY, Calendar.SATURDAY, Calendar.SUNDAY)
+                    .contains(calendar.get(Calendar.DAY_OF_WEEK))) {
+                weekendShiftCount++;
+            }
+        }
+        return weekendShiftCount;
+    }
 
+    private void seedNormalShifts() {
+        int normalShiftCount = getNormalShiftCount();
+    }
+
+    private int getNormalShiftCount() {
+        int normalShiftCount = 0;
+        Calendar calendar = Calendar.getInstance();
+        for (int i = 1; i < shifts.size() + 1; i++) {
+            calendar.set(year, month, i);
+            if (Arrays.asList(Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY)
+                    .contains(calendar.get(Calendar.DAY_OF_WEEK))) {
+                normalShiftCount++;
+            }
+        }
+        return normalShiftCount;
     }
 }
