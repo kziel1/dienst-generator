@@ -11,20 +11,37 @@ import java.util.*;
 
 @Builder
 public class ShiftPlanGenerator {
+    private int seedCount;
     private int shiftLoad;
     private int year;
     private int month;
     private List<String> employees;
     private List<Wish> wishes;
-    private List<Map<String, Integer>> shifts;
+    private List<List<String>> generatedShiftPlan;
+    private List<List<List<String>>> seededShifts;
 
-    public List<Map<String, Integer>> generateShiftPlan() {
+    public List<List<String>> generateShiftPlan() {
         initiateShifts();
-        applyWishes();
-        seedWeekendShifts();
-        seedNormalShifts();
-        return shifts;
+        seedShiftPlans();
+        List<List<List<String>>> seededShifts = new ArrayList<>();
+        return generatedShiftPlan;
     }
+
+    private void seedShiftPlans() {
+        applyDayOffWishes();
+        applyDayOnWishes();
+        applyWeekendShifts();
+    }
+
+
+
+
+
+
+
+
+
+
 
     private void initiateShifts() {
         int dayCount = YearMonth.of(year, month + 1).lengthOfMonth();
@@ -38,61 +55,37 @@ public class ShiftPlanGenerator {
         }
     }
 
-    private void applyWishes() {
-        applyDayOffWishes();
-        applyDayOnWishes();
-        applyColleaguePreference();
+    public void printShifts() {
+        System.out.println("\nShifts:");
+        for (int i = 0; i < shifts.size(); i++) {
+            System.out.print("day " + i);
+            System.out.println(shifts.get(i).toString());
+        }
     }
 
-    private void applyDayOffWishes() {
-        wishes.stream()
-                .filter(wish -> wish instanceof DayOff)
-                .forEach(wish -> wish.applyWish(shifts));
-    }
+    public void printShiftsStatistics() {
+        Map<String, Integer> weekendShifts = new HashMap<>();
+        Map<String, Integer> normalShifts = new HashMap<>();
+        for (String employee : employees) {
+            weekendShifts.put(employee, 0);
+            normalShifts.put(employee, 0);
+        }
+        for (int i = 0; i < shifts.size(); i++) {
+            Map<String, Integer> shift = shifts.get(i);
+            for (String employee : employees) {
+                if (shift.get(employee) > 0) {
+                    if (isWeekendShift(year, month, i)) {
+                        weekendShifts.put(employee, weekendShifts.get(employee) + 1);
+                    } else {
+                        normalShifts.put(employee, normalShifts.get(employee) + 1);
 
-    private void applyDayOnWishes() {
-        wishes.stream()
-                .filter(wish -> wish instanceof DayOn)
-                .forEach(wish -> wish.applyWish(shifts));
-    }
-
-    private void applyColleaguePreference() {
-        wishes.stream()
-                .filter(wish -> wish instanceof ColleaguePreference)
-                .forEach(wish -> wish.applyWish(shifts));
-    }
-
-    private void seedWeekendShifts() {
-        int weekendShiftCount = getWeekendShiftCount();
-    }
-
-    private int getWeekendShiftCount() {
-        int weekendShiftCount = 0;
-        Calendar calendar = Calendar.getInstance();
-        for (int i = 1; i < shifts.size() + 1; i++) {
-            calendar.set(year, month, i);
-            if (Arrays.asList(Calendar.FRIDAY, Calendar.SATURDAY, Calendar.SUNDAY)
-                    .contains(calendar.get(Calendar.DAY_OF_WEEK))) {
-                weekendShiftCount++;
+                    }
+                }
             }
         }
-        return weekendShiftCount;
-    }
-
-    private void seedNormalShifts() {
-        int normalShiftCount = getNormalShiftCount();
-    }
-
-    private int getNormalShiftCount() {
-        int normalShiftCount = 0;
-        Calendar calendar = Calendar.getInstance();
-        for (int i = 1; i < shifts.size() + 1; i++) {
-            calendar.set(year, month, i);
-            if (Arrays.asList(Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY)
-                    .contains(calendar.get(Calendar.DAY_OF_WEEK))) {
-                normalShiftCount++;
-            }
+        System.out.println("\nStatistics (normal / weekend):");
+        for (String employee : employees) {
+            System.out.println(employee + " " + weekendShifts.get(employee) + "/" + normalShifts.get(employee));
         }
-        return normalShiftCount;
     }
 }

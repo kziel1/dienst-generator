@@ -3,8 +3,6 @@ package com.example.dienstgenerator.model.wish;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.Math.min;
-
 public class ColleaguePreference extends Wish {
     String colleague;
 
@@ -18,10 +16,14 @@ public class ColleaguePreference extends Wish {
         for (Map<String, Integer> shift : shifts) {
             Integer employeeWeight = shift.get(employee);
             Integer colleagueWeight = shift.get(colleague);
-            if (employeeWeight > 80 || employeeWeight < 20) {
+            if (employeeWeight == 100 || employeeWeight == 0) {
                 continue;
+            } else if (employeeWeight == 50 && colleagueWeight == 50) {
+                shift.put(employee, 60);
+
+            } else {
+                shift.put(employee, (employeeWeight + colleagueWeight) / 2);
             }
-            shift.put(employee, min((employeeWeight + colleagueWeight) / 2 + 20, 100));
         }
     }
 }

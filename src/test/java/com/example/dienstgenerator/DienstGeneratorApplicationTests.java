@@ -24,19 +24,21 @@ public class DienstGeneratorApplicationTests {
 
     @Test
     public void blabla() {
-        List<Map<String, Integer>> shifts = ShiftPlanGenerator.builder()
+        ShiftPlanGenerator shiftPlanGenerator = ShiftPlanGenerator.builder()
                 .shiftLoad(2)
                 .year(2018)
-                .month(Calendar.MAY)
-                .employees(Arrays.asList("Tiner", "Schildkröte", "Bitch", "Bergdoktor"))
+                .month(Calendar.JUNE)
+                .employees(Arrays.asList("Tiner", "Schildkröte", "Bitch", "Bergdoktor", "Mörder"))
                 .wishes(Arrays.asList(
                         new DayOff("Tiner", 0),
                         new DayOn("Tiner", 2),
                         new DayOn("Bitch", 4),
                         new DayOff("Bitch", 6),
-                        new ColleaguePreference("Tiner", "Bitch")))
-                .build()
-                .generateShiftPlan();
-        shifts.isEmpty();
+                        new ColleaguePreference("Tiner", "Bitch"),
+                        new ColleaguePreference("Bitch", "Tiner")))
+                .build();
+        List<List<String>> shiftPlan = shiftPlanGenerator.generateShiftPlan();
+        shiftPlanGenerator.printShifts();
+        shiftPlanGenerator.printShiftsStatistics();
     }
 }
